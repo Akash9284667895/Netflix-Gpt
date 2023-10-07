@@ -1,12 +1,30 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Header from './Header';
+import { checkValidData } from '../utilis/validate';
 
 const Login = () => {
-const [isSignInForm,setIsSignInForm] = useState(true);
+  const [isSignInForm, setIsSignInForm] = useState(true);
+  const [errorMessage, setErrorMessage] = useState(null);
+  const email = useRef(null);
+  const password = useRef(null);
+  const name = useRef(null);
 
-const toggleSignInForm = () =>{
+  const handleButtonClick = (e) => {
+    e.preventDefault(); // Prevent the default form submission behavior
+
+    console.log(email.current.value);
+    console.log(password.current.value);
+    console.log(name.current.value); // Add this line to get the name value
+
+    const message = checkValidData(email.current.value, password.current.value, name.current.value); // Include name
+    console.log(message);
+    setErrorMessage(message);
+  };
+
+  const toggleSignInForm = () => {
     setIsSignInForm(!isSignInForm);
-}
+  };
+
   return (
     <div>
       <Header />
@@ -16,17 +34,24 @@ const toggleSignInForm = () =>{
           alt='bg img'
         />
       </div>
-      <form className='w-3/12 absolute p-12 bg-opacity-75 bg-black my-36 mx-auto right-0 left-0'>
-        <h1 className='text-white text-3xl mb-4'>{isSignInForm? "Sign In":"Sign Up"}</h1>
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className='w-3/12 absolute p-12 bg-opacity-75 bg-black my-36 mx-auto right-0 left-0 rounded-lg shadow-lg'
+      >
+        <h1 className='text-white text-3xl mb-4'>{isSignInForm ? 'Sign In' : 'Sign Up'}</h1>
         <div className='mb-4'>
-       {!isSignInForm &&<input
-            type='text'
-            placeholder='Full Name'
-            className='w-full py-2 px-3 bg-gray-800 text-white rounded-md placeholder-gray-400'
-          />}
-          </div>
-          <div className='mb-4'>
+          {!isSignInForm && (
+            <input
+              ref={name}
+              type='text'
+              placeholder='Full Name'
+              className='w-full py-2 px-3 bg-gray-800 text-white rounded-md placeholder-gray-400'
+            />
+          )}
+        </div>
+        <div className='mb-4'>
           <input
+            ref={email}
             type='text'
             placeholder='Email Address'
             className='w-full py-2 px-3 bg-gray-800 text-white rounded-md placeholder-gray-400'
@@ -34,16 +59,31 @@ const toggleSignInForm = () =>{
         </div>
         <div className='mb-4'>
           <input
+            ref={password}
             type='password'
             placeholder='Password'
             className='w-full py-2 px-3 bg-gray-800 text-white rounded-md placeholder-gray-400'
           />
         </div>
-        <button className='w-full py-2 px-4 bg-red-500 text-white rounded-md hover:bg-red-600'>
-          {isSignInForm ?"Sign In": "Sign Up"}
+        <div className='mb-4'>
+          {!isSignInForm && (
+            <input
+              ref={password}
+              type='password'
+              placeholder='Confirm Password'
+              className='w-full py-2 px-3 bg-gray-800 text-white rounded-md placeholder-gray-400'
+            />
+          )}
+        </div>
+        <p className='text-red-500 font-bold text-lg py-2'>{errorMessage}</p>
+        <button
+          className='w-full py-2 px-4 bg-red-500 text-white rounded-md hover:bg-red-600'
+          onClick={handleButtonClick}
+        >
+          {isSignInForm ? 'Sign In' : 'Sign Up'}
         </button>
         <p className='py-4 cursor-pointer text-white' onClick={toggleSignInForm}>
-            {isSignInForm ? "New to Netflix? Sign Up Now":"Alreday registered? Sign In Now."}
+          {isSignInForm ? 'New to Netflix? Sign Up Now' : 'Already registered? Sign In Now'}
         </p>
       </form>
     </div>
