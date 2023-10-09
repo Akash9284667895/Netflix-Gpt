@@ -1,10 +1,19 @@
-import React, { useRef, useState } from 'react';
-import Header from './Header';
-import { checkValidData } from '../utilis/validate';
-import { getAuth, createUserWithEmailAndPassword,signInWithEmailAndPassword  } from 'firebase/auth';
-import { useNavigate } from 'react-router-dom';
+import React, { useRef, useState } from "react";
+import Header from "./Header";
+import { checkValidData } from "../utilis/validate";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utilis/userSlice";
+import { Background_IMG } from "../utilis/constants";
 
 const Login = () => {
+  const dispatch = useDispatch();
   const [isSignInForm, setIsSignInForm] = useState(true);
   const [errorMessage, setErrorMessage] = useState(null);
   const navigate = useNavigate();
@@ -37,32 +46,49 @@ const Login = () => {
         .then((userCredential) => {
           // Signed up
           const user = userCredential.user;
+          const auth = getAuth();
+          updateProfile(auth.currentUser, {
+            displayName: nameValue,
+            photoURL: "https://example.com/jane-q-user/profile.jpg",
+          })
+            .then(() => {
+              // Profile updated!
+              const { uid, email, displayName } = auth.currentUser;
+              dispatch(
+                addUser({ uid: uid, email: email, displayName: displayName })
+              );
+              
+            })
+            .catch((error) => {
+              // An error occurred
+              // ...
+              setErrorMessage(error.message);
+            });
           // ...
           console.log(user);
-          navigate("/browse")
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
           // ..
-          setErrorMessage(errorCode + '-' + errorMessage);
+          setErrorMessage(errorCode + "-" + errorMessage);
         });
     } else {
       // Sign In Logic
       const auth = getAuth();
-signInWithEmailAndPassword(auth, emailValue, passwordValue)
-  .then((userCredential) => {
-    // Signed in 
-    const user = userCredential.user;
-    // ...
-    console.log(user);
-    navigate("/browse")
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    setErrorMessage(errorCode +"-"+errorMessage)
-  });
+      signInWithEmailAndPassword(auth, emailValue, passwordValue)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          // ...
+          console.log(user);
+          navigate("/browse");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMessage(errorCode + "-" + errorMessage);
+        });
     }
   };
 
@@ -73,62 +99,69 @@ signInWithEmailAndPassword(auth, emailValue, passwordValue)
   return (
     <div>
       <Header />
-      <div className='absolute'>
+      <div className="absolute">
         <img
-          src='https://assets.nflxext.com/ffe/siteui/vlv3/893a42ad-6a39-43c2-bbc1-a951ec64ed6d/1d86e0ac-428c-4dfa-9810-5251dbf446f8/IN-en-20231002-popsignuptwoweeks-perspective_alpha_website_large.jpg'
-          alt='bg img'
+          src={Background_IMG}
+          alt="bg img"
         />
       </div>
       <form
         onSubmit={(e) => e.preventDefault()}
-        className='w-3/12 absolute p-12 bg-opacity-75 bg-black my-36 mx-auto right-0 left-0 rounded-lg shadow-lg'
+        className="w-3/12 absolute p-12 bg-opacity-75 bg-black my-36 mx-auto right-0 left-0 rounded-lg shadow-lg"
       >
-        <h1 className='text-white text-3xl mb-4'>{isSignInForm ? 'Sign In' : 'Sign Up'}</h1>
-        <div className='mb-4'>
+        <h1 className="text-white text-3xl mb-4">
+          {isSignInForm ? "Sign In" : "Sign Up"}
+        </h1>
+        <div className="mb-4">
           {!isSignInForm && (
             <input
               ref={name}
-              type='text'
-              placeholder='Full Name'
-              className='w-full py-2 px-3 bg-gray-800 text-white rounded-md placeholder-gray-400'
+              type="text"
+              placeholder="Full Name"
+              className="w-full py-2 px-3 bg-gray-800 text-white rounded-md placeholder-gray-400"
             />
           )}
         </div>
-        <div className='mb-4'>
+        <div className="mb-4">
           <input
             ref={email}
-            type='text'
-            placeholder='Email Address'
-            className='w-full py-2 px-3 bg-gray-800 text-white rounded-md placeholder-gray-400'
+            type="text"
+            placeholder="Email Address"
+            className="w-full py-2 px-3 bg-gray-800 text-white rounded-md placeholder-gray-400"
           />
         </div>
-        <div className='mb-4'>
+        <div className="mb-4">
           <input
             ref={password}
-            type='password'
-            placeholder='Password'
-            className='w-full py-2 px-3 bg-gray-800 text-white rounded-md placeholder-gray-400'
+            type="password"
+            placeholder="Password"
+            className="w-full py-2 px-3 bg-gray-800 text-white rounded-md placeholder-gray-400"
           />
         </div>
-        <div className='mb-4'>
+        <div className="mb-4">
           {!isSignInForm && (
             <input
               ref={password}
-              type='password'
-              placeholder='Confirm Password'
-              className='w-full py-2 px-3 bg-gray-800 text-white rounded-md placeholder-gray-400'
+              type="password"
+              placeholder="Confirm Password"
+              className="w-full py-2 px-3 bg-gray-800 text-white rounded-md placeholder-gray-400"
             />
           )}
         </div>
-        <p className='text-red-500 font-bold text-lg py-2'>{errorMessage}</p>
+        <p className="text-red-500 font-bold text-lg py-2">{errorMessage}</p>
         <button
-          className='w-full py-2 px-4 bg-red-500 text-white rounded-md hover:bg-red-600'
+          className="w-full py-2 px-4 bg-red-500 text-white rounded-md hover:bg-red-600"
           onClick={handleButtonClick}
         >
-          {isSignInForm ? 'Sign In' : 'Sign Up'}
+          {isSignInForm ? "Sign In" : "Sign Up"}
         </button>
-        <p className='py-4 cursor-pointer text-white' onClick={toggleSignInForm}>
-          {isSignInForm ? 'New to Netflix? Sign Up Now' : 'Already registered? Sign In Now'}
+        <p
+          className="py-4 cursor-pointer text-white"
+          onClick={toggleSignInForm}
+        >
+          {isSignInForm
+            ? "New to Netflix? Sign Up Now"
+            : "Already registered? Sign In Now"}
         </p>
       </form>
     </div>
