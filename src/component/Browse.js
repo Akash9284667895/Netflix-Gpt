@@ -11,14 +11,6 @@ const Browse = () => {
       <Header />
       <MainContainer />
       <SecondaryContainer />
-      {
-        //   MainContainer
-        //   -videoBackground
-        //   -videoTitle
-        //   SecondaryContainer
-        //   -MovieList *n
-        //   -cards *n
-      }
     </div>
   );
 };

@@ -1,19 +1,28 @@
-import React from 'react'
-import { useSelector } from 'react-redux'
-import VideoBackground from "../component/VideoBackground"
-import VideoTitle from "../component/VideoTitle"
+import React from 'react';
+import VideoTitle from '../component/VideoTitle';
+import VideoBackground from '../component/VideoBackground';
+import { useSelector } from 'react-redux';
 
 const MainContainer = () => {
-    const movies = useSelector((store)=>store.movies?.nowPlayingMovies);
-    if(!movies) return;
-    const mainMovie = movies[1];
-    console.log(mainMovie);
+  const movies = useSelector((store) => store.movies?.nowPlayingMovies);
+console.log(movies);
+  if (!movies) {
+    // Handle the case where movies is undefined or null
+    return null; // or you can return a loading message or component
+  }
+
+  const mainMovies = movies[1];
+  console.log(mainMovies);
+
+  const {original_title,overview,id} = mainMovies
+
   return (
     <div>
-    <VideoTitle/>
-    <VideoBackground/>
+      <VideoTitle title = {original_title} overview = {overview} />
+      <VideoBackground movieId={id} />
+      <h1>Hello</h1>
     </div>
-  )
-}
+  );
+};
 
-export default MainContainer
+export default MainContainer;
