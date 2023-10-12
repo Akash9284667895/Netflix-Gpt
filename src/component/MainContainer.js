@@ -20,7 +20,6 @@ console.log(movies);
     <div>
       <VideoTitle title = {original_title} overview = {overview} />
       <VideoBackground movieId={id} />
-      <h1>Hello</h1>
     </div>
   );
 };
