@@ -5,14 +5,14 @@ import { useSelector } from 'react-redux';
 
 const MainContainer = () => {
   const movies = useSelector((store) => store.movies?.nowPlayingMovies);
-console.log(movies);
+//console.log(movies);
   if (!movies) {
     // Handle the case where movies is undefined or null
     return null; // or you can return a loading message or component
   }
 
   const mainMovies = movies[1];
-  console.log(mainMovies);
+ // console.log(mainMovies);
 
   const {original_title,overview,id} = mainMovies
 

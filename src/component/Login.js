@@ -28,12 +28,12 @@ const Login = () => {
     const passwordValue = password.current.value;
     const nameValue = name.current ? name.current.value : null;
 
-    console.log(emailValue);
-    console.log(passwordValue);
-    console.log(nameValue); // Add this line to get the name value
+    //console.log(emailValue);
+    //console.log(passwordValue);
+    //console.log(nameValue); // Add this line to get the name value
 
     const message = checkValidData(emailValue, passwordValue, nameValue); // Include name
-    console.log(message);
+   // console.log(message);
     setErrorMessage(message);
 
     if (message) return;
@@ -65,7 +65,7 @@ const Login = () => {
               setErrorMessage(error.message);
             });
           // ...
-          console.log(user);
+          //console.log(user);
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -81,7 +81,7 @@ const Login = () => {
           // Signed in
           const user = userCredential.user;
           // ...
-          console.log(user);
+        //  console.log(user);
           navigate("/browse");
         })
         .catch((error) => {

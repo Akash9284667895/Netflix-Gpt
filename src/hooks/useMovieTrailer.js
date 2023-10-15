@@ -12,7 +12,7 @@ import { options } from "../utilis/constants";
           options
         );
         const json = await data.json();
-        console.log(json);
+       // console.log(json);
   
         // Example: Filter videos by type (e.g., "Trailer")
         const filteredVideos = json.results.filter(
@@ -21,7 +21,7 @@ import { options } from "../utilis/constants";
         const trailer = filteredVideos.length
           ? filteredVideos[0]
           : json.results[0];
-        console.log(trailer);
+       // console.log(trailer);
         dispatch(addTrailerVideo(trailer));
       } catch (error) {
         console.error("Error fetching movie videos:", error);
