@@ -9,6 +9,7 @@ import { changeLanguage } from "../utilis/configSlice";
 
 const Header = () => {
   const user = useSelector((store) => store.user);
+  const showGptSearch = useSelector((store)=>store.gpt.showGptSearch)
   const navigate = useNavigate();
   const dispatch = useDispatch();
   useEffect(() => {
@@ -57,7 +58,7 @@ const Header = () => {
       <img className="w-44" src={LOGO} alt="logo" />
       {user && (
         <div className="flex p-2">
-          <select
+          {showGptSearch &&<select
             className="p-2 m-2 bg-gray-900 text-white"
             onChange={handleLanguageChange}
           >
@@ -66,12 +67,12 @@ const Header = () => {
                 {lang.name}
               </option>
             ))}
-          </select>
+          </select>}
           <button
             className="py-2 px-4 mx-4 my-2 bg-orange-600 text-white rounded-lg"
             onClick={handleGptSearchClick}
           >
-            GPT Search
+            {showGptSearch ? "HomePage":"GPT Search"}
           </button>
           <img className="w-12 h-12" src={User_Profile} />
           <button className="font-bold text-white" onClick={handleCkick}>
